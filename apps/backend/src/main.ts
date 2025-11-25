@@ -7,9 +7,9 @@ async function bootstrap() {
   // Habilitar CORS se necessário
   app.enableCors();
 
-  await app.listen(3000, () => {
-    console.log('🚀 Servidor rodando em http://localhost:3000');
-    console.log('📚 Documentação disponível em http://localhost:3000/api');
+  await app.listen(3001, () => {
+    console.log('🚀 Backend running on http://localhost:3001');
+    console.log('📚 GraphQL Playground: http://localhost:3001/graphql');
   });
 }
 

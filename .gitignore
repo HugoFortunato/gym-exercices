@@ -1,6 +1,7 @@
 # dependencies
 node_modules/
 dist/
+.next/
 
 # environment variables
 .env
@@ -23,3 +24,9 @@ prisma/dev.db
 
 # GraphQL
 src/schema.gql
+
+# Monorepo
+apps/*/node_modules
+apps/*/dist
+apps/*/.next
+apps/*/.env

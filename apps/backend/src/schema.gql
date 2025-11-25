@@ -1,0 +1,38 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input CreateTaskInput {
+  description: String
+  title: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Mutation {
+  createTask(input: CreateTaskInput!): Task!
+  updateTask(id: Int!, input: CreateTaskInput!): Task!
+}
+
+type Query {
+  """Busca uma tarefa por ID"""
+  task(
+    """ID da tarefa"""
+    id: Int!
+  ): Task
+
+  """Busca todas as tarefas"""
+  tasks: [Task!]!
+}
+
+type Task {
+  completed: Boolean!
+  createdAt: DateTime!
+  description: String
+  id: ID!
+  title: String!
+  updatedAt: DateTime!
+}

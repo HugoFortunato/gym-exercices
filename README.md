@@ -1,10 +1,23 @@
-# Gym Exercices API
+# Gym Exercices - Monorepo
 
-Gym exercises management API built with **NestJS**, **Prisma**, **PostgreSQL**, **Redis**, and **GraphQL**.
+Full-stack gym exercises management application.
 
-🚀 Featuring:
-- **Redis Cache** on task listing for better performance!
-- **GraphQL API** with Apollo Server and interactive Playground!
+## Stack
+
+### Backend
+
+- **NestJS** - Node.js framework
+- **Prisma** - Database ORM
+- **PostgreSQL** - Database
+- **Redis** - Cache
+- **GraphQL** - API with Apollo Server
+
+### Frontend
+
+- **Next.js 16** - React framework
+- **Tailwind CSS** - Styling
+- **Shadcn/ui** - UI components (ready to use)
+- **TypeScript** - Type safety
 
 ## 🚀 Quick Start
 
@@ -12,155 +25,153 @@ Gym exercises management API built with **NestJS**, **Prisma**, **PostgreSQL**, 
 
 - Node.js (version 18+)
 - Docker and Docker Compose
-- npm or yarn
+- npm
 
-### 1️⃣ Installation
+### 1️⃣ Install dependencies
 
 ```bash
 npm install
 ```
 
-### 2️⃣ Configure the database
-
-Create a `.env` file in the project root:
+### 2️⃣ Setup Backend
 
 ```bash
-DATABASE_URL="postgresql://gym_user:gym_password@localhost:5432/gym_db?schema=public"
-```
+# Create .env file in apps/backend
+cd apps/backend
+echo 'DATABASE_URL="postgresql://gym_user:gym_password@localhost:5432/gym_db?schema=public"' > .env
 
-### 3️⃣ Start PostgreSQL with Docker
-
-```bash
+# Start PostgreSQL and Redis
 docker-compose up -d
-```
 
-Wait a few seconds for the database to be ready.
-
-### 4️⃣ Run Prisma migrations
-
-```bash
+# Run migrations
 npx prisma migrate dev --name init
+npx prisma generate
+
+# Seed database
+npm run prisma:seed
 ```
 
-This will create the tables in the database.
-
-### 5️⃣ Start the server
+### 3️⃣ Start Development
 
 ```bash
-npm run start:dev
+# From root directory
+
+# Start backend only
+npm run dev:backend
+
+# Start frontend only
+npm run dev:frontend
+
+# Start both (recommended)
+npm run dev
 ```
 
-The server will be available at `http://localhost:3000`
+- Backend: `http://localhost:3001`
+- Frontend: `http://localhost:3000`
+- GraphQL Playground: `http://localhost:3001/graphql`
 
-## 📚 Endpoints
+## 📚 API Endpoints
 
-### Health Check / Hello World
-```
-GET /tasks
-```
+Base URL: `http://localhost:3001`
 
-Returns information about the API and available endpoints.
+### REST API
 
-### List all tasks
-```
-GET /tasks/list
-```
+- `GET /tasks` - Health check
+- `GET /tasks/list` - List all tasks
+- `GET /tasks/:id` - Get task by ID
+- `POST /tasks` - Create task
+- `PUT /tasks/:id` - Update task
+- `PATCH /tasks/:id/toggle` - Toggle completion
+- `DELETE /tasks/:id` - Delete task
 
-### Get a specific task
-```
-GET /tasks/:id
-```
+### GraphQL
 
-### Create a new task
-```
-POST /tasks
-Content-Type: application/json
+- Endpoint: `http://localhost:3001/graphql`
+- Playground: `http://localhost:3001/graphql`
 
-{
-  "title": "Task 1",
-  "description": "Task description"
+Example query:
+
+```graphql
+query {
+  tasks {
+    id
+    title
+    completed
+  }
 }
-```
-
-### Update a task
-```
-PUT /tasks/:id
-Content-Type: application/json
-
-{
-  "title": "Updated task",
-  "description": "New description"
-}
-```
-
-### Toggle completion status
-```
-PATCH /tasks/:id/toggle
-```
-
-### Delete a task
-```
-DELETE /tasks/:id
 ```
 
 ## 🗄️ Project Structure
 
 ```
-src/
-├── main.ts              # Application entry point
-├── app.module.ts        # Main module
-├── tasks/               # Tasks module
-│   ├── tasks.controller.ts
-│   ├── tasks.service.ts
-│   ├── tasks.module.ts
-│   └── dto/
-│       └── create-task.dto.ts
-├── prisma/
-│   └── schema.prisma    # Database schema
-└── ...
+gym-exercices/
+├── apps/
+│   ├── backend/         # NestJS API
+│   │   ├── src/
+│   │   ├── prisma/
+│   │   └── package.json
+│   └── frontend/        # Next.js App
+│       ├── app/
+│       ├── components/
+│       ├── lib/
+│       └── package.json
+├── docs/                # Documentation
+├── package.json         # Monorepo root
+└── README.md
 ```
 
 ## 🛠️ Useful Commands
 
 ### Development
+
 ```bash
-npm run start:dev       # Start with hot reload
-npm run start:debug     # Start in debug mode
+npm run dev              # Start both backend and frontend
+npm run dev:backend      # Start backend only
+npm run dev:frontend     # Start frontend only
 ```
 
 ### Build
+
 ```bash
-npm run build           # Build for production
-npm run start:prod      # Run compiled version
+npm run build            # Build both apps
+npm run build:backend    # Build backend only
+npm run build:frontend   # Build frontend only
 ```
 
-### Database
+### Database (from apps/backend)
+
 ```bash
-npx prisma studio      # Open Prisma Studio (data viewer)
-npx prisma migrate dev # Create new migration
-npx prisma db seed     # Run seed (if configured)
+cd apps/backend
+npx prisma studio        # Open Prisma Studio
+npx prisma migrate dev   # Create migration
+npm run prisma:seed      # Seed database
 ```
 
-### Linting
+### Shadcn (from apps/frontend)
+
 ```bash
-npm run lint            # Run ESLint
-npm run format          # Format code
+cd apps/frontend
+npx shadcn@latest add button  # Add component
+npx shadcn@latest add card     # Add card component
 ```
 
 ## 🐳 Docker
 
-### Stop the database
+All Docker commands should be run from `apps/backend`:
+
 ```bash
+cd apps/backend
+
+# Start services
+docker-compose up -d
+
+# Stop services
 docker-compose down
-```
 
-### View logs
-```bash
-docker-compose logs -f postgres
-```
+# View logs
+docker-compose logs -f
 
-### Remove database data
-```bash
+# Remove data
 docker-compose down -v
 ```
 
