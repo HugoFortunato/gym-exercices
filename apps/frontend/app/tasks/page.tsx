@@ -1,4 +1,5 @@
 import { getTasks } from './action';
+import ListTask from '@/components/list-task';
 
 export default async function TasksPage() {
   const { success, data: tasks, error } = await getTasks();
@@ -22,29 +23,7 @@ export default async function TasksPage() {
         <p className="text-zinc-400">No tasks found</p>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {tasks.map((task) => (
-            <div
-              key={task.id}
-              className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-6"
-            >
-              <div className="flex items-start justify-between">
-                <h3 className="text-lg font-semibold">{task.title}</h3>
-                {task.completed && (
-                  <span className="rounded-full bg-green-500/20 px-2 py-1 text-xs text-green-500">
-                    Completed
-                  </span>
-                )}
-              </div>
-
-              {task.description && (
-                <p className="mt-2 text-sm text-zinc-400">{task.description}</p>
-              )}
-
-              <div className="mt-4 text-xs text-zinc-500">
-                Created: {new Date(task.createdAt).toLocaleDateString()}
-              </div>
-            </div>
-          ))}
+          <ListTask tasks={tasks} />
         </div>
       )}
     </div>

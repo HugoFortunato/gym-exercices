@@ -1,17 +1,14 @@
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 import { createClient } from 'redis';
 
-// Tipo do cliente Redis
 type RedisClient = ReturnType<typeof createClient>;
 
 @Injectable()
 export class RedisService implements OnModuleInit, OnModuleDestroy {
-  // Cliente Redis que será inicializado
   private client!: RedisClient;
 
   async onModuleInit() {
     try {
-      // Criar conexão com Redis
       this.client = createClient({
         socket: {
           host: 'localhost',
@@ -19,12 +16,10 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
         },
       });
 
-      // Listener para erro
       this.client.on('error', (err) => {
         console.error('❌ Erro no Redis:', err);
       });
 
-      // Conectar ao Redis
       await this.client.connect();
       console.log('✅ Conectado ao Redis com sucesso!');
     } catch (error) {
@@ -34,7 +29,6 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   }
 
   async onModuleDestroy() {
-    // Desconectar do Redis ao destruir o módulo
     if (this.client) {
       try {
         await this.client.disconnect();

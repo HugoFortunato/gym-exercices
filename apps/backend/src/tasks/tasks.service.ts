@@ -52,11 +52,8 @@ export class TasksService implements OnModuleInit, OnModuleDestroy {
       const cachedTask = await this.redisService.get(cacheKey);
 
       if (cachedTask) {
-        console.log('Tarefa encontrada no Redis');
         return JSON.parse(cachedTask);
       }
-
-      console.log('Tarefa não encontrada no Redis');
 
       const task = await this.prisma.task.findUnique({
         where: { id },

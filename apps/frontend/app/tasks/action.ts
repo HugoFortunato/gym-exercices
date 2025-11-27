@@ -1,5 +1,7 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
+
 type Task = {
   id: string;
   title: string;
@@ -108,6 +110,53 @@ export async function getTask(id: string) {
       success: false,
       error: error instanceof Error ? error.message : 'Failed to fetch task',
       data: null,
+    };
+  }
+}
+
+export async function deleteTask(id: string) {
+  try {
+    const response = await fetch('http://localhost:3001/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: `
+          mutation DeleteTask($id: Int!) {
+            deleteTask(id: $id) {
+              id
+            }
+          }
+        `,
+        variables: {
+          id: parseInt(id),
+        },
+      }),
+      cache: 'no-store',
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result = await response.json();
+
+    if (result.errors) {
+      throw new Error(result.errors[0].message);
+    }
+
+    revalidatePath('/tasks');
+
+    return {
+      success: true,
+      data: result.data.deleteTask,
+    };
+  } catch (error) {
+    console.error('Error deleting task:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to delete task',
     };
   }
 }
