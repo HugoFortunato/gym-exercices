@@ -117,7 +117,6 @@ export class TasksService implements OnModuleInit, OnModuleDestroy {
     });
 
     await this.redisService.del('tasks:all');
-    console.log('🗑️  Cache invalidado após deletar tarefa');
 
     return deletedTask;
   }

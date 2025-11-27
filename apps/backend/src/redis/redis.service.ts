@@ -21,9 +21,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
       });
 
       await this.client.connect();
-      console.log('✅ Conectado ao Redis com sucesso!');
     } catch (error) {
-      console.error('❌ Erro ao conectar ao Redis:', error);
       throw error;
     }
   }
@@ -32,7 +30,6 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
     if (this.client) {
       try {
         await this.client.disconnect();
-        console.log('🔌 Desconectado do Redis');
       } catch (error) {
         console.error('❌ Erro ao desconectar do Redis:', error);
       }
